@@ -1,7 +1,7 @@
 ---
 title: "An investigation on the Quality of red wine"
 author: Michaela Lueck
-date: 2018-12-16
+date: 2018-12-17
 output:
   html_document:
     df_print: paged
@@ -631,6 +631,44 @@ they go to the bottom right. The second plot shows the relation of the rating
 with votile acidity and pH score. I was interested in the result because 
 normally acidity and pH have a strong correlation. 
 
+```{r echo=FALSE, Plot_TwoPrepa}
+
+# plot fot quality and alcohol content linear model 
+ggplot(rw, aes(x = alcohol, y = quality)) +
+  geom_jitter(alpha = 0.1, height = 0.48, width = 0.025) +
+  ggtitle("Quality vs Alcohol Content") +
+  geom_smooth(method = "lm") +
+  xlab("Alcohol (%)") +
+  ylab("Quality (0-10)")
+ 
+
+```
+
+The boxplot shown in the analysis above  is devlivering less information than
+the scatterplot, but it is more compact and they can be easily compared.
+Here we can see that good wines have a higher level 
+of alcohol. Both pictures are to be seen complementary to underline the 
+correlation between quality / rating and alcohol content
+
+```{r echo=FALSE, Plot_Three_prepa}
+
+# final plot for density alcohol and rating 
+ggplot(data=rw, aes(x=alcohol, y=density, color=rating))+
+geom_point(alpha=0.5, size=0.5)+
+geom_jitter(alpha=0.3)+ 
+geom_smooth(method='lm', se=FALSE)+
+ xlab('Alcohol Percentage') + 
+ylab('redwine Density in gramm per decimeter')+
+ ggtitle('Redwine Density and Alcohol % for 
+         Different Category of redwine Rating')+
+  scale_x_log10()
+
+```
+
+This graph is putting together the density, the alcohol percentage and the 
+rating. From my opinion these are good correlated variables and we clearly see
+the average wines have have a stronger density than the good ones, we have
+a few exceptions due to outliers. 
 
 ### Were there any interesting or surprising interactions between features?
 The density decreases as the alcohol increases. What may not be as obvious 
@@ -672,16 +710,17 @@ ggplot(rw, aes(alcohol)) +
 We see here the right skewed distribution of the alcohol and the number of
 wines, the mean (10,42%) and the median (10.2%)
 are realtively close.There are not many wines which have a percentage 
-higher than 12%. 
+higher than 12%. I have chosen this plot as is is a more detailed view than 
+the one in the univariate section. 
 
 ### Plot Two
 
 ```{r echo=FALSE, Plot_Two}
 
 # plot fot quality and alcohol content linear model 
-ggplot(rw, aes(x = alcohol, y = quality)) +
+ggplot(data=rw, mapping=aes(x = alcohol, y = quality, color= alcohol.levels)) +
   geom_jitter(alpha = 0.1, height = 0.48, width = 0.025) +
-  geom_smooth(method = "lm") +
+  geom_smooth(method = "loess") +
   ggtitle("Quality vs Alcohol Content") +
   xlab("Alcohol (%)") +
   ylab("Quality (0-10)")+
@@ -691,11 +730,14 @@ ggplot(rw, aes(x = alcohol, y = quality)) +
 
 ### Description Two
 
-The boxplot shown in the analysis above  is devlivering less information than
-the scatterplot, but it is more compact and they can be easily compared.
-Here we can see that good wines have a higher level 
-of alcohol. Both pictures are to be seen complementary to underline the 
-correlation between quality / rating and alcohol content. 
+Adding the lm smooth method is adding good information to the plot Smoothers fit
+a model to my data and are plotting the predicition (loess gives a good
+apperance, I used it as we have dataset which is not too big, loesis O(N2)
+in memory, so does not work for larger datasets.) . The graph is well 
+underlying that good wines have a higher level of alcohol. 
+This graph is con be seen complementary to underline the 
+correlation between quality alcohol content. Interesting is here that the 
+increase of alcohol is not endlessly increasing the quality. 
 
 ### Plot Three
 
@@ -703,7 +745,7 @@ correlation between quality / rating and alcohol content.
 
 # final plot for density alcohol and rating 
 ggplot(data=rw, aes(x=alcohol, y=density, color=rating))+
- geom_point(alpha=0.5, size=0.5)+
+geom_point(alpha=0.5, size=0.5)+
 geom_jitter(alpha=0.3)+ 
 geom_smooth(method='lm', se=FALSE)+
  xlab('Alcohol Percentage') + 
@@ -717,8 +759,9 @@ ylab('redwine Density in gramm per decimeter')+
 ### Description Three
 
 Density of wine is strong. The higher the alcohol %, the lower is the density.
-It’s clearly visible that in this plot, stronger wine tend
-to have higher rating.
+It’s clearly visible that in this plot, stronger wine tend to have higher 
+rating. I decided to take this plot from the multivariate analyis as my final 
+plot as it is showing the correlations explained earlier very clearly. 
 
 ------
 
@@ -741,8 +784,17 @@ into something really new as I never had any touch with R.
 I learned that R is a very powerful tool in explanatory data analysis 
 and give pretty surprising insights of an anknown topic. 
 
+Remark: additional struggle for me was also, know after having submitted, to 
+exactly understand the specifications correctly. As I tried to make polished
+graphs througout the project, it was not easy to match the final plot section as 
+I see no added value in double information in the report. For the third graph
+I did copy and paste as I had no idea how to polish even more :-) 
+
 The topic of building a model could be one of further investigation. 
-I am not sure how to choose the best variables for a predictive model.
+I am not sure how to choose the best variables for a predictive model. 
+Nevertheless the  regression I am showing on alcohol level and quality
+is an entry point. 
+
 On top my knowledge of wine is so limited that 
 I would like to know which acids could explain the variation 
 in the pH score as I think the 
